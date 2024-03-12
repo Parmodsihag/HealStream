@@ -65,6 +65,7 @@ def create_tables(conn= conn):
     opd_slips_table = """
     CREATE TABLE IF NOT EXISTS OPD_Slips (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        opd_number INTEGER NOT NULL,
         patient_id INTEGER REFERENCES Patients(id),
         doctor_id INTEGER REFERENCES Doctors(id),
         slip_date TEXT NOT NULL,
@@ -77,6 +78,7 @@ def create_tables(conn= conn):
     cursor = execute_query(departments_table)
     cursor = execute_query(doctors_table)
     cursor = execute_query(opd_slips_table)
+
 # Patient Functions
 
 def create_patient(name, age, sex, address, mobile_number, guardian):
@@ -122,45 +124,52 @@ def get_all_departments():
 
 # Doctor Functions
 
-def create_doctor(name, department_id, conn=conn):
+def create_doctor(name, department_id):
     """Inserts a new doctor record."""
     sql = "INSERT INTO Doctors (name, department_id) VALUES (?, ?)"
     params = (name, department_id)
     execute_query(sql, params)
 
-def get_doctor_by_id(doctor_id, conn=conn):
+def get_doctor_by_id(doctor_id):
     """Retrieves a doctor record by ID."""
     sql = "SELECT * FROM Doctors WHERE id = ?"
     params = (doctor_id,)
     cursor = execute_query(sql, params)
     return fetch_one(cursor)
 
-def get_doctors_by_department(department_id, conn=conn):
+def get_doctors_by_department(department_id):
     """Retrieves all doctors associated with a department."""
     sql = "SELECT * FROM Doctors WHERE department_id = ?"
     params = (department_id,)
     cursor = execute_query(sql, params)
     return fetch_all(cursor)
 
+
+def get_all_doctors():
+    """Retrieves all Doctors records."""
+    sql = "SELECT * FROM Doctors"
+    cursor = execute_query(sql)
+    return fetch_all(cursor)
+
 # OPD Slip Functions
 
-def create_opd_slip(patient_id, doctor_id, department_id, date_time, symptoms, conn=conn):
+def create_opd_slip(opd_number, patient_id, doctor_id, slip_date, valid_upto, amount , UHID_NO):
     """Inserts a new OPD slip record."""
     sql = """
-    INSERT INTO OPD_Slips (patient_id, doctor_id, department_id, date_time, symptoms)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO OPD_Slips (opd_number, patient_id, doctor_id, slip_date, valid_upto, amount , UHID_NO)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
     """
-    params = (patient_id, doctor_id, department_id, date_time, symptoms)
+    params = (opd_number, patient_id, doctor_id, slip_date, valid_upto, amount , UHID_NO)
     execute_query(sql, params)
 
-def get_opd_slip_by_id(opd_slip_id, conn=conn):
+def get_opd_slip_by_id(opd_slip_id):
     """Retrieves an OPD slip record by ID."""
     sql = "SELECT * FROM OPD_Slips WHERE id = ?"
     params = (opd_slip_id,)
     cursor = execute_query( sql, params)
     return fetch_one(cursor)
 
-def get_opd_slips_by_patient(patient_id, conn=conn):
+def get_opd_slips_by_patient(patient_id):
     """Retrieves all OPD slips for a specific patient."""
     sql = "SELECT * FROM OPD_Slips WHERE patient_id = ?"
     params = (patient_id,)

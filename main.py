@@ -9,7 +9,7 @@ from depatment import DepartmentPage
 from doctors import DoctorPage
 from reports import ReportsPage
 from patients import PatientPage
-
+from opdgrap import OPDPage
 # from modifypage import ModifyPage
 
 class CustomLabel(tk.Frame):
@@ -172,6 +172,8 @@ class MyApp(tk.Tk):
         # adding other views frames
         self.homeframe = HomePage(self.action_frame)
         self.homeframe.place(relx=0, rely=0, relheight=1, relwidth=1)
+        self.opdframe = OPDPage(self.action_frame)
+        self.opdframe.place(relx=0, rely=0, relheight=1, relwidth=1)
         self.patientframe = PatientPage(self.action_frame)
         self.patientframe.place(relx=0, rely=0, relheight=1, relwidth=1)
         self.doctorframe = DoctorPage(self.action_frame)
@@ -186,6 +188,8 @@ class MyApp(tk.Tk):
         # adding labels in menu
         self.home_page_label = CustomLabel(self.menu_frame, "Home ",self.homeframe, "h")
         self.home_page_label.pack( fill="x")
+        self.opd_page_label = CustomLabel(self.menu_frame, "OPD ",self.opdframe, "o")
+        self.opd_page_label.pack( fill="x")
         self.patient_page_label = CustomLabel(self.menu_frame, 'Patient ', self.patientframe, 'p')
         self.patient_page_label.pack(fill='x')
         self.doctor_page_label = CustomLabel(self.menu_frame, 'Doctor ', self.doctorframe, 'd')
