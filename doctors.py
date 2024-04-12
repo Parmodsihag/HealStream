@@ -12,7 +12,7 @@ class DoctorPage(tk.Frame):
     def __init__(self, master, **kwargs):
         super().__init__(master, bg=Colors.BACKGROUND1, **kwargs)
 
-        img = tk.PhotoImage(file="myicons\\framebg2.png")
+        img = tk.PhotoImage(file="C://HealStream//images//framebg2.png")
 
         self.background_title = tk.Label(self, image=img)
         self.background_title.place(relx=0, rely=0, relheight=1, relwidth=1)

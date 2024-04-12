@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import PhotoImage
 from datetime import datetime
+import os
 
 from mytheme import Colors
 from homepage import HomePage
@@ -100,7 +101,7 @@ class MyApp(tk.Tk):
         self.state("zoomed")
         self.config(background=Colors.BACKGROUND1)
 
-        img = tk.PhotoImage(file="myicons\\framebg2.png")
+        img = tk.PhotoImage(file="C://HealStream//images//framebg2.png")
 
         self.background_title = tk.Label(self, image=img)
         self.background_title.place(relx=0, rely=0, relheight=1, relwidth=1)
@@ -108,34 +109,24 @@ class MyApp(tk.Tk):
         self.img = img
 
         style=ttk.Style()
-        style.theme_create('mytheme', parent='alt', 
-                        settings={
-                            'TCombobox':
-                            {
-                                'configure':
-                                {
-                                'selectbackground': "#4EC5F1",
-                                'fieldbackground': Colors.BACKGROUND3,
-                                'background': Colors.BACKGROUND3,
-                                'foreground': Colors.FG_SHADE_1,
-                                'arrowcolor':Colors.FOREGROUND,
-                                'arrowsize': 18,
-                                'font':"Consolas 14"
-                                }
-                            },
-                            'Treeview':{
-                                'configure':
-                                {
-                                    'rowheight': 20,
-                                    'fieldbackground': Colors.BACKGROUND,
-                                    'font': 'Ubantu 10'
-                                }
-                            }
-                        }
-                    )
-        style.theme_use('mytheme')
-        style.configure("Treeview.Heading", foreground='#a0dad0', background=Colors.BACKGROUND1, font='Consolas 12')
-
+        style.theme_use('alt')
+        style.configure('Treeview', 
+                        fieldbackground=Colors.BACKGROUND1,
+                        rowheight=25, 
+                        font='Ubantu 10')
+        style.configure("Treeview.Heading", 
+                        foreground='#a0dad0', 
+                        background=Colors.BACKGROUND1, 
+                        selectbackground=Colors.BACKGROUND1, 
+                        font='Consolas 12')
+        style.configure('TCombobox',
+                        selectbackground= "#4EC5F1",
+                        fieldbackground= Colors.BACKGROUND3, 
+                        background= Colors.BACKGROUND3, 
+                        foreground= Colors.FG_SHADE_1, 
+                        arrowcolor= Colors.FOREGROUND, 
+                        arrowsize= 18,
+                        font= "Consolas 14")
         # main 4 parts 
         self.title_bar = tk.Frame(self, bg=Colors.BG_SHADE_1)
         self.title_bar.place(relx=0, rely=0, relheight=0.04, relwidth=1)
@@ -150,7 +141,7 @@ class MyApp(tk.Tk):
         # logo
         self.logo_frame = tk.Frame(self, bg=Colors.BACKGROUND1)
         self.logo_frame.place(relx=0.005, rely=0.05, relheight=0.2, relwidth=0.095)
-        self.logo_image = PhotoImage(file="myicons/logo3.png")
+        self.logo_image = PhotoImage(file="C://HealStream//images//logo3.png")
         logo_image_label = tk.Label(self.logo_frame, image=self.logo_image, background=Colors.BACKGROUND1)
         logo_image_label.pack( fill="both", expand=1)
         
@@ -170,8 +161,8 @@ class MyApp(tk.Tk):
         
 
         # adding other views frames
-        self.homeframe = HomePage(self.action_frame)
-        self.homeframe.place(relx=0, rely=0, relheight=1, relwidth=1)
+        # self.homeframe = HomePage(self.action_frame)
+        # self.homeframe.place(relx=0, rely=0, relheight=1, relwidth=1)
         self.opdframe = OPDPage(self.action_frame)
         self.opdframe.place(relx=0, rely=0, relheight=1, relwidth=1)
         self.patientframe = PatientPage(self.action_frame)
@@ -186,8 +177,8 @@ class MyApp(tk.Tk):
         # self.modifyframe.place(relx=0, rely=0, relheight=1, relwidth=1)
 
         # adding labels in menu
-        self.home_page_label = CustomLabel(self.menu_frame, "Home ",self.homeframe, "h")
-        self.home_page_label.pack( fill="x")
+        # self.home_page_label = CustomLabel(self.menu_frame, "Home ",self.homeframe, "h")
+        # self.home_page_label.pack( fill="x")
         self.opd_page_label = CustomLabel(self.menu_frame, "OPD ",self.opdframe, "o")
         self.opd_page_label.pack( fill="x")
         self.patient_page_label = CustomLabel(self.menu_frame, 'Patient ', self.patientframe, 'p')
@@ -202,7 +193,7 @@ class MyApp(tk.Tk):
         # self.modify_frame_label.pack( fill="x")
 
         # activating home page
-        self.home_page_label.set_active()
+        # self.home_page_label.set_active()
 
         self.bind()
         # self.report_frame_label.set_active()
@@ -219,6 +210,32 @@ class MyApp(tk.Tk):
         self.status.set(s)
 
 
+
+def create_application_folders():
+    # Root folder for your application
+    root_folder = "C:\\HealStream"
+    
+    # List of subfolders to create
+    subfolders = ["data", "templates", "images"]
+    
+    try:
+        # Check if the root folder exists
+        if not os.path.exists(root_folder):
+            # Create the root folder if it doesn't exist
+            os.makedirs(root_folder)
+            print(f"Root folder '{root_folder}' created.")
+
+        # Create subfolders within the root folder
+        for folder in subfolders:
+            folder_path = os.path.join(root_folder, folder)
+            if not os.path.exists(folder_path):
+                os.makedirs(folder_path)
+                print(f"Subfolder '{folder}' created.")
+
+    except Exception as e:
+        print(f"Error occurred: {str(e)}")
+
 if __name__ == "__main__":
+    create_application_folders()
     app = MyApp()
     app.mainloop()

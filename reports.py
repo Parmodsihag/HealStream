@@ -18,7 +18,7 @@ class ReportsPage(tk.Frame):
     def __init__(self, master, **kwargs):
         super().__init__(master, bg=Colors.ACTIVE_BACKGROUND, **kwargs)
 
-        img = tk.PhotoImage(file="myicons\\framebg2.png")
+        img = tk.PhotoImage(file="C://HealStream//images//framebg2.png")
 
         self.background_title = tk.Label(self, image=img)
         self.background_title.place(relx=0, rely=0, relheight=1, relwidth=1)
@@ -42,19 +42,7 @@ class ReportsPage(tk.Frame):
     
     def table_selector(self):
         font = "Consolas 16"
-        self.db = "mydb.db"
-        # database_names = ["accounts.db", "daily_notes.db", "inventory.db", "krar.db"]
-        # db_label = tk.Label(self.upper_frame, text="Database:", bg=Colors.BACKGROUND, fg=Colors.ACTIVE_FOREGROUND, font=font)
-        # db_label.pack(side="left", padx=5, pady=5)
-        # self.db_dropdown = ttk.Combobox(self.upper_frame, values=database_names, width=20, font=font)
-        # self.db_dropdown.pack(side="left", padx=5, pady=5)
-        # self.db_dropdown.bind('<<ComboboxSelected>>', lambda e : self.update_table_names())
-
-
-        # self.db_dropdown.bind('<Enter>', lambda e: db_dropdown.config(values=get_item_list()))
-        # self.db_dropdown.bind('<Down>', lambda e: update_listbox_items(db_dropdown, get_item_list(), b_in1.get()))
-
-
+        self.db = "C://HealStream//data//healstream.db"
         # Create table dropdown
         cur = db_functions.execute_query("SELECT name FROM sqlite_master WHERE type='table'")
         self.table_list = cur.fetchall()
@@ -119,40 +107,68 @@ class ReportsPage(tk.Frame):
         
         return column_names, table_data
     
-    def show_table(self):
-        column_name, table_data = self.show_data()
-        if column_name and table_data:
-            # print("emot")
+    # def show_table(self):
+    #     column_name, table_data = self.show_data()
+    #     if column_name and table_data:
+    #         # print("emot")
 
-            for widget in self.table_frame.winfo_children():
-                    widget.destroy()
+    #         for widget in self.table_frame.winfo_children():
+    #                 widget.destroy()
                 
+    #         tree = ttk.Treeview(self.table_frame)
+    #         tree['columns'] = column_name
+    #         tree.column('#0', width=1, minwidth=1)
+
+    #         for i in column_name:
+    #             tree.column(i, width=50)#, anchor='center')
+    #             tree.heading(i, text=i)
+            
+    #         c = 0
+    #         for i in table_data:
+    #             c += 1
+    #             tg = 'odd'
+    #             if c%2 == 0:
+    #                 tg = "even"
+    #             tree.insert('', c, text=c, values=i, tags = tg )
+
+    #         tree.tag_configure('odd', background=Colors.BACKGROUND, foreground=Colors.ACTIVE_FOREGROUND)
+    #         tree.tag_configure('even', background=Colors.BACKGROUND1, foreground=Colors.ACTIVE_FOREGROUND)
+    #         tree.pack(fill=tk.BOTH, expand=True, side=tk.TOP) 
+    #     else:
+    #         print("Empty fields for reports")
+
+    def show_table(self):
+        """
+        Displays a table with alternating row colors based on fetched data.
+
+        Handles empty data scenarios and potential errors gracefully.
+        """
+
+        column_names, table_data = self.show_data()
+
+        # Clear existing table widgets before creating a new one
+        for widget in self.table_frame.winfo_children():
+            widget.destroy()
+
+        if column_names and table_data:
             tree = ttk.Treeview(self.table_frame)
-            tree['columns'] = column_name
+            tree['columns'] = column_names
             tree.column('#0', width=1, minwidth=1)
 
-            for i in column_name:
-                tree.column(i, width=50)#, anchor='center')
+            for i in column_names:
+                tree.column(i, width=50, anchor='center')  # Set center alignment
                 tree.heading(i, text=i)
-            
-            c = 0
-            for i in table_data:
-                c += 1
-                tg = 'odd'
-                if c%2 == 0:
-                    tg = "even"
-                tree.insert('', c, text=c, values=i, tags = tg )
 
-            # tree.tag_configure('odd', background=Colors.ACTIVE_BACKGROUND, foreground=Colors.FG_SHADE_1)
-            # tree.tag_configure('even', background=Colors.ACTIVE_FOREGROUND, foreground=Colors.BG_SHADE_2)
+            for i, row in enumerate(table_data):
+                color = 'odd' if i % 2 == 0 else 'even'
+                tree.insert('', tk.END, text=i + 1, values=row, tags=(color,))
+
             tree.tag_configure('odd', background=Colors.BACKGROUND, foreground=Colors.ACTIVE_FOREGROUND)
             tree.tag_configure('even', background=Colors.BACKGROUND1, foreground=Colors.ACTIVE_FOREGROUND)
-            tree.pack(fill=tk.BOTH, expand=True, side=tk.TOP) 
+            tree.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
         else:
-            print("Empty fields for reports")
-
-
-
+            # Handle empty data or errors (consider exception handling or custom message)
+            print("No data available for the table.") 
 
 
 
